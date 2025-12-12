@@ -1,5 +1,6 @@
 // controllers/predictController.js
 const { getModelInfo, predict } = require("../services/tfModelService");
+const predictionService = require("../services/predictionService");   // <-- AÑADIDO
 
 function health(req, res) {
   res.json({
@@ -64,13 +65,22 @@ async function doPredict(req, res) {
     const latencyMs = Date.now() - start;
     const timestamp = new Date().toISOString();
 
-    // De momento sin MongoDB → predictionId null
+    // ------------------------------
+    // CAMBIO: Guardar predicción en MongoDB
+    // ------------------------------
+    const record = await predictionService.guardarPrediccion(
+      meta.dataId,
+      features,
+      prediction
+    );
+
     res.status(201).json({
-      predictionId: null,
+      predictionId: record._id,   // <-- ANTES era null
       prediction,
       timestamp,
       latencyMs
     });
+
   } catch (err) {
     console.error("Error en /predict:", err);
     res.status(500).json({ error: "Internal error" });

@@ -3,6 +3,7 @@
 
 const express = require("express");
 const path = require("path");
+const mongoose = require("mongoose"); // <-- (AÑADIDO)
 const predictRoutes = require("./routes/predictRoutes");
 const { initModel } = require("./services/tfModelService");
 
@@ -17,6 +18,12 @@ app.use("/model", express.static(modelDir));
 
 // Rutas del servicio PREDICT
 app.use("/", predictRoutes);
+
+// Conexión a MongoDB (persistencia de predicciones)
+// (CORREGIDO: eliminación de opciones obsoletas)
+mongoose.connect("mongodb://localhost:27017/predictdb")
+  .then(() => console.log("[PREDICT] MongoDB conectado"))
+  .catch(err => console.error("[PREDICT] Error al conectar MongoDB:", err));
 
 // Arranque del servidor + carga del modelo
 app.listen(PORT, async () => {
