@@ -1,5 +1,6 @@
 // server.js
 // Entry point del servicio PREDICT
+require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
@@ -13,7 +14,7 @@ const app = express();
 app.use(express.json());
 
 // Servir la carpeta del modelo TFJS (model/model.json + pesos)
-const modelDir = path.resolve(__dirname, "model");
+const modelDir = path.resolve(__dirname, process.env.MODEL_DIR);
 app.use("/model", express.static(modelDir));
 
 // Rutas del servicio PREDICT
@@ -21,7 +22,7 @@ app.use("/", predictRoutes);
 
 // Conexión a MongoDB (persistencia de predicciones)
 // (CORREGIDO: eliminación de opciones obsoletas)
-mongoose.connect("mongodb://localhost:27017/predictdb")
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("[PREDICT] MongoDB conectado"))
   .catch(err => console.error("[PREDICT] Error al conectar MongoDB:", err));
 

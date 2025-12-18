@@ -4,7 +4,7 @@ const { pathToFileURL } = require("url");
 const tf = require("@tensorflow/tfjs");
 const wasmBackend = require("@tensorflow/tfjs-backend-wasm");
 
-const MODEL_VERSION = "v1.0";
+const MODEL_VERSION = process.env.MODEL_VERSION;
 
 let model = null;
 let ready = false;
@@ -46,7 +46,8 @@ async function initModel(serverUrl) {
   await tf.ready();
   console.log("[TF] Backend:", tf.getBackend());
 
-  const modelDir = path.resolve(__dirname, "..", "model");
+  const modelDir = path.resolve(__dirname, process.env.MODEL_DIR);
+
   console.log("[TF] Sirviendo modelo desde:", modelDir);
 
   const modelUrl = `${serverUrl}/model/model.json`;
