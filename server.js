@@ -1,10 +1,9 @@
 // server.js
-// Entry point del servicio PREDICT
 require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
-const mongoose = require("mongoose"); // <-- (AÑADIDO)
+const mongoose = require("mongoose");
 const predictRoutes = require("./routes/predictRoutes");
 const { initModel } = require("./services/tfModelService");
 
@@ -13,7 +12,6 @@ const PORT = process.env.PORT || 3002;
 const app = express();
 app.use(express.json());
 
-// Servir la carpeta del modelo TFJS (model/model.json + pesos)
 const modelDir = path.resolve(__dirname, process.env.MODEL_DIR);
 app.use("/model", express.static(modelDir));
 
@@ -21,7 +19,6 @@ app.use("/model", express.static(modelDir));
 app.use("/", predictRoutes);
 
 // Conexión a MongoDB (persistencia de predicciones)
-// (CORREGIDO: eliminación de opciones obsoletas)
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("[PREDICT] MongoDB conectado"))
   .catch(err => console.error("[PREDICT] Error al conectar MongoDB:", err));

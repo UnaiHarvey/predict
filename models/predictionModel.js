@@ -10,5 +10,4 @@ const predictionSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// Esto crea la colección 'predictions' automáticamente
 module.exports = mongoose.model('Prediction', predictionSchema);
